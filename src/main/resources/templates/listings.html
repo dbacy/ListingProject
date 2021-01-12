@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <title th:text="${title}">Java Final</title>
+    <link th:href="@{/css/main.css}" rel="stylesheet" media="screen"/>
+</head>
+<body>
+<div class="container">
+    <form class="form-horizontal" th:action="@{/listings/search}" method="post">
+        <div>
+            <label>City:</label>
+            <div><input type="text" th:value="${city}" name="city"/></div>
+
+            <label>Maximum Price:</label>
+            <div><input type="number" name="price"/></div>
+
+            <label>At least # Bedrooms:</label>
+            <div><input type="number" th:value="${bed}" name="beds"/></div>
+
+            <label>More than Sq. Feet:</label>
+            <div><input type="number" th:value="${sqFt}" name="sqFt"/></div>
+
+            <div><button type="submit">Submit</button></div>
+        </div>
+    </form>
+    <div th:if="${#lists.isEmpty(listings)}">
+        <h2>Nothing found</h2>
+        <h3>Try Again</h3>
+    </div>
+    <div th:if="${not #lists.isEmpty(listings)}">
+        <h3 th:text="'Matching Homes: ' + ${listings.size()}"></h3>
+        <h4 th:text=" ${criteria}"></h4>
+        <table class="blueTable">
+            <thead>
+            <tr>
+                <!--
+                    This is just for your reference to remind you or the attributes you can choose to display
+                        propertyType,   address,    city,       zip,
+                        price,          beds,       baths,      location,
+                        sqFt,           lotSize,    yearBuilt,  daysOnMarket,
+                        pricePerSqFt,   hoa,        link,       latitude,       longitude
+                -->
+                <th>City</th>
+                <th>Zip</th>
+                <th>Price</th>
+                <th>Sq Feet</th>
+                <th>Beds / Baths</th>
+                <th>Location</th>
+                <th>Link to Listing</th>
+            </tr>
+            </thead>
+            <tr th:each="listing : ${listings}">
+                <td th:text="${listing.city}">City</td>
+                <td th:text="${listing.zip}" align="right">Zip</td>
+                <td th:text="${#numbers.formatCurrency(listing.price)}" align="right">Price</td>
+                <td th:text="${listing.sqFt}" align="right">Sq Ft</td>
+                <td th:text="${listing.beds} + ' / ' + ${listing.baths}" align="center">Beds</td>
+                <td th:text="${listing.location}">Location</td>
+                <td><a th:href="${listing.link}"><div th:text="${listing.address}"></div></a></td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>
