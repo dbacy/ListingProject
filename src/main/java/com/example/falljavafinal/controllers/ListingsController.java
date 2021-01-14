@@ -3,6 +3,7 @@ package com.example.falljavafinal.controllers;
 import com.example.falljavafinal.models.Listing;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,11 +40,32 @@ public class ListingsController {
         return "listings";
     }
 
+    @RequestMapping("howmany/{number}")
+    public String justAFew(@PathVariable Integer number, Model model) {
+        model.addAttribute("title", "Show Homes");
+        model.addAttribute("criteria", "Here is a list of " + number + " homes");
+
+        List<Listing> smallList = listings.stream().limit(number).collect(Collectors.toList());;
+        model.addAttribute("listings", smallList);
+        return "listings";
+    }
+
+    @RequestMapping("zip/{aaa}")
+    public String zipLove(@PathVariable String aaa , Model model) {
+        model.addAttribute("title", "Show Homes in zip");
+        model.addAttribute("criteria", "Here is a list of homes in " + aaa );
+
+        List<Listing> smallList = listings.stream().filter(z -> z.getZip().equals(aaa)).collect(Collectors.toList());;
+        model.addAttribute("listings", smallList);
+        return "listings";
+    }
+
     //  entry point provided for you for the search request in the listing page
     //      initially in only receives the city name. You will add more to it in this exam
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public String search(@RequestParam String city, @RequestParam Integer price,
-                         @RequestParam Integer sqFt, @RequestParam Integer beds, Model model) {
+                         @RequestParam Integer sqFt, @RequestParam Integer beds, Model model,
+                         @RequestParam  Integer hoa) {
         List<Listing> matchedHomes = listings;
 
         String criteria = "Found Matching Listings:";
@@ -65,12 +87,23 @@ public class ListingsController {
             criteria += ", " + beds + "+ beds";
         }
 
+        if (sqFt != null && sqFt > 0) {
+            matchedHomes = findBySQFT(matchedHomes, sqFt);
+            criteria += " " + sqFt + "+ SQFT";
+        }
+
+        if (hoa != null && hoa > 0) {
+            matchedHomes = findByHOAFee(matchedHomes, hoa);
+            criteria += " HOA less than " + hoa ;
+        }
+
         model.addAttribute("title", "Home Listings");
         model.addAttribute("criteria", criteria);
         model.addAttribute("listings", matchedHomes);
-
+        model.addAttribute("sqFt", sqFt);
         model.addAttribute("city", city);
         model.addAttribute("beds", beds);
+        model.addAttribute("hoa", hoa);
 
         return "listings";
     }
@@ -86,18 +119,47 @@ public class ListingsController {
      *      save that home to the list of suggested homes for the home buyer
      */
     public List<Listing> findByBeds(List<Listing> list, int beds) {
-        //  shortList will contain the listings with at least the number of bed rooms searched for
+        //  shortList will contain the listings with xx number of bed rooms searched for
         List<Listing> shortList = new ArrayList<>();
 
         //  look at all listings. One at a time
         for (Listing Listing : list) {
-            //  check to see if the first or last name contains the name given
-            //  we will convert the first and last names to lowercase since contains does a case sensitive compare
+            //  check to see if the number of beds given
             if (Listing.getBeds() >= beds) {
                 shortList.add(Listing);
             }
         }
-        //  return the list of Listings we found matching the name provided
+        //  return the list of Listings we found matching the number of beds provided
+        return shortList;
+    }
+
+    public List<Listing> findBySQFT(List<Listing> list, int sqFt) {
+
+        List<Listing> shortList = new ArrayList<>();
+
+
+        for (Listing Listing : list) {
+
+            if (Listing.getSqFt() >= sqFt) {
+                shortList.add(Listing);
+            }
+        }
+
+        return shortList;
+    }
+
+    public List<Listing> findByHOAFee(List<Listing> list, int hoa) {
+
+        List<Listing> shortList = new ArrayList<>();
+
+
+        for (Listing Listing : list) {
+
+            if (Listing.getHoa() <= hoa) {
+                shortList.add(Listing);
+            }
+        }
+
         return shortList;
     }
 }

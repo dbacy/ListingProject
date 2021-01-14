@@ -8,17 +8,21 @@
 <div class="container">
     <form class="form-horizontal" th:action="@{/listings/search}" method="post">
         <div>
-            <label>City:</label>
+            <label><b>City:</b></label>
             <div><input type="text" th:value="${city}" name="city"/></div>
 
-            <label>Maximum Price:</label>
+            <label><b>Maximum Price:</b></label>
             <div><input type="number" name="price"/></div>
 
-            <label>At least # Bedrooms:</label>
-            <div><input type="number" th:value="${bed}" name="beds"/></div>
+            <label><b>At least # Bedrooms:</b></label>
+            <div><input type="number" th:value="${beds}" name="beds"/></div>
 
-            <label>More than Sq. Feet:</label>
+            <label><b>More than Sq. Feet:</b></label>
             <div><input type="number" th:value="${sqFt}" name="sqFt"/></div>
+
+            <label><b>HOA Fee:</b></label>
+            <div><input type="number" th:value="${hoa}" name="hoa"/></div>
+
 
             <div><button type="submit">Submit</button></div>
         </div>
@@ -46,6 +50,7 @@
                 <th>Sq Feet</th>
                 <th>Beds / Baths</th>
                 <th>Location</th>
+                <th>HOA Fee</th>
                 <th>Link to Listing</th>
             </tr>
             </thead>
@@ -56,6 +61,7 @@
                 <td th:text="${listing.sqFt}" align="right">Sq Ft</td>
                 <td th:text="${listing.beds} + ' / ' + ${listing.baths}" align="center">Beds</td>
                 <td th:text="${listing.location}">Location</td>
+                <td th:text="${listing.hoa}" align="right">HOA</td>
                 <td><a th:href="${listing.link}"><div th:text="${listing.address}"></div></a></td>
             </tr>
         </table>

@@ -53,3 +53,11 @@ table.blueTable tfoot .links a {
     padding: 2px 8px;
     border-radius: 5px;
 }
+body{
+    background-color: lightgreen;
+}
+
+input{
+    color: #1C6EA4;
+    cursor: pointer;
+}
