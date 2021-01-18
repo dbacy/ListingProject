@@ -4,6 +4,7 @@ table.blueTable {
     width: 100%;
     text-align: left;
     border-collapse: collapse;
+    background: transparent;
 }
 
 table.blueTable td, table.blueTable th {
@@ -54,10 +55,25 @@ table.blueTable tfoot .links a {
     border-radius: 5px;
 }
 body{
-    background-color: lightgreen;
+    background: url("/images/blueprint.jpg") top / cover no-repeat fixed;
+    margin: 0px;
 }
 
 input{
     color: #1C6EA4;
     cursor: pointer;
 }
+
+form{
+    opacity: 0.6;
+}
+
+form:hover{
+    opacity: 1.0;
+}
+
+/*#listingpic{*/
+/*    position: fixed;*/
+/*    top: 0;*/
+/*    right: 0;*/
+/*}*/
